@@ -26,90 +26,109 @@
     </header>
 
     <main class="max-w-2xl mx-auto bg-white p-6 mt-10 rounded-xl shadow">
-      <h2 class="text-xl font-bold text-center mb-6">Simulez votre salaire net</h2>
+  <h2 class="text-xl font-bold text-center mb-6">Simulez votre salaire net</h2>
 
-      <div class="space-y-4">
-        <div>
-          <label for="statut" class="block font-medium mb-1">Statut</label>
-          <select id="statut" class="form-select w-full h-12">
-            <option value="cadre">Cadre (~25%)</option>
-            <option value="non-cadre">Non Cadre (~23%)</option>
-            <option value="fonctionpublique">Fonction Publique (~15%)</option>
-            <option value="liberal">Profession Libérale (~45%)</option>
-          </select>
-        </div>
+  <div class="space-y-4">
+    <div>
+      <label for="statut" class="block font-medium mb-1">Statut</label>
+      <select id="statut" class="form-select w-full h-12">
+        <option value="cadre">Cadre (~25%)</option>
+        <option value="non-cadre">Non Cadre (~23%)</option>
+        <option value="fonctionpublique">Fonction Publique (~15%)</option>
+        <option value="liberal">Profession Libérale (~45%)</option>
+      </select>
+    </div>
 
-        <div>
-          <label for="taux" class="block font-medium mb-1">Taux personnalisé (%) <span class="text-gray-400 text-sm">(optionnel)</span></label>
-          <input id="taux" type="number" step="0.1" class="form-input w-full h-12" placeholder="Ex : 21.5" />
-        </div>
+    <div>
+      <label for="taux" class="block font-medium mb-1">Taux personnalisé (%) <span class="text-gray-400 text-sm">(optionnel)</span></label>
+      <input id="taux" type="number" step="0.1" class="form-input w-full h-12" placeholder="Ex : 21.5" />
+    </div>
 
-        <div>
-          <label for="brut" class="block font-medium mb-1">Salaire Brut Annuel (€)</label>
-          <input id="brut" type="number" class="form-input w-full h-12" placeholder="Ex : 50000" />
-        </div>
+    <div>
+      <label for="brut" class="block font-medium mb-1">Salaire Brut Annuel (€)</label>
+      <input id="brut" type="number" class="form-input w-full h-12" placeholder="Ex : 50000" />
+    </div>
 
-        <button onclick="calculerSalaire()" class="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded font-semibold">Calculer</button>
-      </div>
+    <div>
+      <label for="mois" class="block font-medium mb-1">Nombre de mois payés</label>
+      <select id="mois" class="form-select w-full h-12">
+        <option value="12">12 mois</option>
+        <option value="13">13 mois</option>
+        <option value="14">14 mois</option>
+        <option value="15">15 mois</option>
+      </select>
+    </div>
 
-      <div id="resultats" class="mt-8 hidden">
-        <h3 class="text-lg font-bold mb-4">🧾 Résultats estimés</h3>
-        <ul class="space-y-2 text-sm leading-relaxed">
-          <li><strong>Net annuel :</strong> <span id="netAnnuel">--</span> €</li>
-          <li><strong>Net mensuel :</strong> <span id="netMois">--</span> €</li>
-          <li><strong>Net hebdomadaire :</strong> <span id="netSemaine">--</span> €</li>
-          <li><strong>Net journalier :</strong> <span id="netJour">--</span> €</li>
-          <li><strong>Net horaire (base 35h) :</strong> <span id="netHeure">--</span> €</li>
-          <li class="pt-2"><strong>Impôts & Cotisations :</strong> <span id="taxes">--</span> €</li>
-          <li><strong>Coût Employeur estimé :</strong> <span id="employeur">--</span> €</li>
-        </ul>
-      </div>
-    </main>
+    <button onclick="calculerSalaire()" class="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded font-semibold">
+      Calculer
+    </button>
+  </div>
 
+  <div id="resultats" class="mt-8 hidden">
+    <h3 class="text-lg font-bold mb-4">🧾 Résultats estimés</h3>
+    <ul class="space-y-2 text-sm leading-relaxed">
+      <li><strong>Net annuel (avec bonus) :</strong> <span id="netAnnuel">--</span> €</li>
+      <li><strong>Net mensuel (moyenne sur 12 mois) :</strong> <span id="netMois">--</span> €</li>
+      <li><strong>Net hebdomadaire :</strong> <span id="netSemaine">--</span> €</li>
+      <li><strong>Net journalier :</strong> <span id="netJour">--</span> €</li>
+      <li><strong>Net horaire (35h) :</strong> <span id="netHeure">--</span> €</li>
+      <li class="pt-2"><strong>Impôts & Cotisations :</strong> <span id="taxes">--</span> €</li>
+      <li><strong>Coût Employeur estimé :</strong> <span id="employeur">--</span> €</li>
+    </ul>
+  </div>
+</main>
+
+
+
+
+    <script>
+  function calculerSalaire() {
+    const brut = parseFloat(document.getElementById("brut").value);
+    const statut = document.getElementById("statut").value;
+    const tauxInput = parseFloat(document.getElementById("taux").value);
+    const mois = parseInt(document.getElementById("mois").value);
+
+    if (isNaN(brut) || brut <= 0) {
+      alert("Veuillez saisir un salaire brut annuel valide.");
+      return;
+    }
+
+    const tauxParStatut = {
+      "cadre": 0.25,
+      "non-cadre": 0.23,
+      "fonctionpublique": 0.15,
+      "liberal": 0.45,
+    };
+
+    const taux = !isNaN(tauxInput) && tauxInput >= 0 && tauxInput <= 100
+      ? tauxInput / 100
+      : tauxParStatut[statut] || 0.25;
+
+    const brutGlobal = brut * (mois / 12); // Ex : 13 mois = 1.0833
+    const netAnnuel = brutGlobal * (1 - taux);
+    const taxes = brutGlobal - netAnnuel;
+    const netMois = netAnnuel / 12;
+    const netSemaine = netAnnuel / 52;
+    const netJour = netAnnuel / 260;
+    const netHeure = netAnnuel / (52 * 35);
+    const employeur = brutGlobal * 1.25;
+
+    const f = (n) => n.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+    const f2 = (n) => n.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
+
+    document.getElementById("netAnnuel").textContent = f(netAnnuel);
+    document.getElementById("netMois").textContent = f(netMois);
+    document.getElementById("netSemaine").textContent = f(netSemaine);
+    document.getElementById("netJour").textContent = f(netJour);
+    document.getElementById("netHeure").textContent = f2(netHeure);
+    document.getElementById("taxes").textContent = f(taxes);
+    document.getElementById("employeur").textContent = f(employeur);
+
+    document.getElementById("resultats").classList.remove("hidden");
+  }
+</script>
     <footer class="text-center text-xs text-gray-400 mt-10 pb-5">
       &copy; 2025 Simulateur de rémunération – Données indicatives à titre personnel.
     </footer>
-
-    <script>
-      function calculerSalaire() {
-        const brut = parseFloat(document.getElementById("brut").value);
-        const statut = document.getElementById("statut").value;
-        const tauxInput = parseFloat(document.getElementById("taux").value);
-
-        if (isNaN(brut) || brut <= 0) {
-          alert("Veuillez saisir un salaire brut annuel valide.");
-          return;
-        }
-
-        const tauxParStatut = {
-          "cadre": 0.25,
-          "non-cadre": 0.23,
-          "fonctionpublique": 0.15,
-          "liberal": 0.45,
-        };
-
-        const taux = !isNaN(tauxInput) && tauxInput >= 0 && tauxInput <= 100
-          ? tauxInput / 100
-          : tauxParStatut[statut] || 0.25;
-
-        const netAnnuel = brut * (1 - taux);
-        const taxes = brut - netAnnuel;
-        const netMois = netAnnuel / 12;
-        const netSemaine = netAnnuel / 52;
-        const netJour = netAnnuel / 260;   // environ 5j/sem × 52
-        const netHeure = netAnnuel / (52 * 35); // base 35h/sem
-        const employeur = brut * 1.25;
-
-        document.getElementById("netAnnuel").textContent = netAnnuel.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        document.getElementById("netMois").textContent = netMois.toFixed(0);
-        document.getElementById("netSemaine").textContent = netSemaine.toFixed(0);
-        document.getElementById("netJour").textContent = netJour.toFixed(0);
-        document.getElementById("netHeure").textContent = netHeure.toFixed(2);
-        document.getElementById("taxes").textContent = taxes.toFixed(0);
-        document.getElementById("employeur").textContent = employeur.toFixed(0);
-
-        document.getElementById("resultats").classList.remove("hidden");
-      }
-    </script>
   </body>
 </html>
