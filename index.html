@@ -57,16 +57,63 @@
           <div class="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 max-w-[960px] flex-1">
             <h2 class="text-[#111418] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">Calculate your gross to net salary</h2>
             <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-              <label class="flex flex-col min-w-40 flex-1">
-                <p class="text-[#111418] text-base font-medium leading-normal pb-2">Status</p>
-                <select
-                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border border-[#dbe0e6] bg-white focus:border-[#dbe0e6] h-14 bg-[image:--select-button-svg] placeholder:text-[#60758a] p-[15px] text-base font-normal leading-normal"
-                >
-                  <option value="one"></option>
-                  <option value="two">two</option>
-                  <option value="three">three</option>
-                </select>
-              </label>
+              <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-center mb-4">Calculez votre salaire net à partir du brut</h2>
+
+                <label class="block mb-4">
+                  <span class="text-gray-700 font-medium">Statut</span>
+                  <select id="statut-select" class="block w-full mt-1 border border-gray-300 rounded p-2">
+                    <option value="cadre">Cadre</option>
+                    <option value="non-cadre">Non Cadre</option>
+                    <option value="fonctionnaire">Fonctionnaire</option>
+                  </select>
+                </label>
+
+                <div class="bg-gray-50 p-4 rounded border border-gray-200 mt-4">
+                  <h3 class="text-lg font-semibold mb-3">Résultats (pour un salaire brut annuel de 50 000 €)</h3>
+
+                  <div id="resultats-statiques">
+                    <!-- Cadre par défaut -->
+                    <p class="text-sm text-gray-700"><strong>Statut :</strong> Cadre</p>
+                    <p class="text-sm text-gray-700"><strong>Salaire Net annuel :</strong> 37 500 €</p>
+                    <p class="text-sm text-gray-700"><strong>Impôts & Cotisations :</strong> 12 500 €</p>
+                    <p class="text-sm text-gray-700"><strong>Coût Employeur :</strong> 62 500 €</p>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                const resultats = {
+                  "cadre": {
+                    statut: "Cadre",
+                    net: "37 500 €",
+                    taxes: "12 500 €",
+                    employeur: "62 500 €"
+                  },
+                  "non-cadre": {
+                    statut: "Non Cadre",
+                    net: "38 500 €",
+                    taxes: "11 500 €",
+                    employeur: "61 000 €"
+                  },
+                  "fonctionnaire": {
+                    statut: "Fonctionnaire",
+                    net: "42 500 €",
+                    taxes: "7 500 €",
+                    employeur: "57 500 €"
+                  }
+                };
+
+                document.getElementById("statut-select").addEventListener("change", function () {
+                  const selected = resultats[this.value];
+                  document.getElementById("resultats-statiques").innerHTML = `
+                    <p class="text-sm text-gray-700"><strong>Statut :</strong> ${selected.statut}</p>
+                    <p class="text-sm text-gray-700"><strong>Salaire Net annuel :</strong> ${selected.net}</p>
+                    <p class="text-sm text-gray-700"><strong>Impôts & Cotisations :</strong> ${selected.taxes}</p>
+                    <p class="text-sm text-gray-700"><strong>Coût Employeur :</strong> ${selected.employeur}</p>
+                  `;
+                });
+              </script>
             </div>
             <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
               <label class="flex flex-col min-w-40 flex-1">
@@ -104,5 +151,20 @@
         </div>
       </div>
     </div>
+    <script>
+      document.querySelector("button").addEventListener("click", function () {
+        const grossInput = document.querySelector('input[placeholder="Enter your gross annual salary"]');
+        const gross = parseFloat(grossInput.value || 0);
+        const taxes = gross * 0.25; // Exemple de taux fixe à adapter
+        const net = gross - taxes;
+        const employerCost = gross * 1.25;
+
+        const results = document.querySelectorAll(".grid .text-[#111418]");
+        results[0].textContent = `${net.toLocaleString()} €`;
+        results[1].textContent = `${taxes.toLocaleString()} €`;
+        results[2].textContent = `${employerCost.toLocaleString()} €`;
+      });
+    </script>
+
   </body>
 </html>
