@@ -3,132 +3,150 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simulateur Brut ➝ Net</title>
+    <title>Simulateur de Salaire</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900" />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;800&display=swap" rel="stylesheet" />
     <style>
       body {
         font-family: 'Public Sans', sans-serif;
       }
+      .card {
+        @apply bg-white rounded-xl shadow-lg transition-transform hover:scale-[1.015] duration-300;
+      }
     </style>
   </head>
-  <body class="bg-gray-50 text-[#111418] min-h-screen">
-    <header class="bg-white shadow px-8 py-4 flex items-center justify-between">
+  <body class="bg-gray-100 min-h-screen text-[#111418]">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm p-5 flex items-center justify-between">
       <h1 class="text-2xl font-bold">💼 Paycheck Simulator</h1>
-      <nav class="space-x-6 text-sm font-medium">
-        <a href="index.html">Accueil</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="careersimulator.html">Career Simulator</a>
-        <a href="benefitshub.html">Benefits Hub</a>
-        <a href="salaryinsights.html">Salary Insights</a>
+      <nav class="space-x-6 text-sm">
+        <a href="index.html" class="hover:underline">Accueil</a>
+        <a href="dashboard.html" class="hover:underline">Dashboard</a>
+        <a href="careersimulator.html" class="hover:underline">Carrière</a>
+        <a href="benefitshub.html" class="hover:underline">Avantages</a>
+        <a href="salaryinsights.html" class="hover:underline">Salaire</a>
       </nav>
     </header>
 
-    <main class="max-w-2xl mx-auto bg-white p-6 mt-10 rounded-xl shadow">
-  <h2 class="text-xl font-bold text-center mb-6">Simulez votre salaire net</h2>
+    <!-- Contenu principal -->
+    <main class="max-w-4xl mx-auto mt-10 px-6">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold mb-6 text-center">🧮 Simulateur Brut ➝ Net avec bonus</h2>
 
-  <div class="space-y-4">
-    <div>
-      <label for="statut" class="block font-medium mb-1">Statut</label>
-      <select id="statut" class="form-select w-full h-12">
-        <option value="cadre">Cadre (~25%)</option>
-        <option value="non-cadre">Non Cadre (~23%)</option>
-        <option value="fonctionpublique">Fonction Publique (~15%)</option>
-        <option value="liberal">Profession Libérale (~45%)</option>
-      </select>
-    </div>
+        <!-- Formulaire -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="font-semibold mb-1 block">Statut</label>
+            <select id="statut" class="form-select w-full h-12">
+              <option value="cadre">Cadre (~25%)</option>
+              <option value="non-cadre">Non Cadre (~23%)</option>
+              <option value="fonctionpublique">Fonction Publique (~15%)</option>
+              <option value="liberal">Profession Libérale (~45%)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-semibold mb-1 block">Taux personnalisé (%) <span class="text-gray-400 text-sm">(optionnel)</span></label>
+            <input type="number" step="0.1" id="taux" class="form-input w-full h-12" placeholder="Ex : 22" />
+          </div>
+          <div>
+            <label class="font-semibold mb-1 block">Salaire Brut Annuel (€)</label>
+            <input type="number" id="brut" class="form-input w-full h-12" placeholder="Ex : 50000" />
+          </div>
+          <div>
+            <label class="font-semibold mb-1 block">Nombre de mois payés</label>
+            <select id="mois" class="form-select w-full h-12">
+              <option value="12">12 mois</option>
+              <option value="13">13 mois</option>
+              <option value="14">14 mois</option>
+              <option value="15">15 mois</option>
+            </select>
+          </div>
+        </div>
 
-    <div>
-      <label for="taux" class="block font-medium mb-1">Taux personnalisé (%) <span class="text-gray-400 text-sm">(optionnel)</span></label>
-      <input id="taux" type="number" step="0.1" class="form-input w-full h-12" placeholder="Ex : 21.5" />
-    </div>
+        <button onclick="calculerSalaire()" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white h-12 rounded w-full font-semibold text-lg">
+          🔍 Calculer
+        </button>
+      </div>
 
-    <div>
-      <label for="brut" class="block font-medium mb-1">Salaire Brut Annuel (€)</label>
-      <input id="brut" type="number" class="form-input w-full h-12" placeholder="Ex : 50000" />
-    </div>
+      <!-- Résultats -->
+      <section id="resultats" class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+        <div class="card p-6">
+          <h3 class="text-blue-600 font-bold text-lg mb-2">💶 Net annuel</h3>
+          <p id="netAnnuel" class="text-2xl font-extrabold text-neutral-900">--</p>
+        </div>
+        <div class="card p-6">
+          <h3 class="text-blue-600 font-bold text-lg mb-2">📆 Net mensuel</h3>
+          <p id="netMois" class="text-2xl font-extrabold text-neutral-900">--</p>
+        </div>
+        <div class="card p-6">
+          <h3 class="text-blue-600 font-bold text-lg mb-2">📉 Cotisations</h3>
+          <p id="taxes" class="text-2xl font-extrabold text-red-600">--</p>
+        </div>
+        <div class="card p-6">
+          <h3 class="text-blue-600 font-bold text-lg mb-2">💼 Coût Employeur</h3>
+          <p id="employeur" class="text-2xl font-extrabold text-neutral-900">--</p>
+        </div>
+        <div class="card p-6">
+          <h3 class="text-blue-600 font-bold text-lg mb-2">📅 Net hebdo</h3>
+          <p id="netSemaine" class="text-2xl font-extrabold text-neutral-900">--</p>
+        </div>
+        <div class="card p-6">
+          <h3 class="text-blue-600 font-bold text-lg mb-2">🕒 Net horaire</h3>
+          <p id="netHeure" class="text-2xl font-extrabold text-neutral-900">--</p>
+        </div>
+      </section>
+    </main>
 
-    <div>
-      <label for="mois" class="block font-medium mb-1">Nombre de mois payés</label>
-      <select id="mois" class="form-select w-full h-12">
-        <option value="12">12 mois</option>
-        <option value="13">13 mois</option>
-        <option value="14">14 mois</option>
-        <option value="15">15 mois</option>
-      </select>
-    </div>
-
-    <button onclick="calculerSalaire()" class="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded font-semibold">
-      Calculer
-    </button>
-  </div>
-
-  <div id="resultats" class="mt-8 hidden">
-    <h3 class="text-lg font-bold mb-4">🧾 Résultats estimés</h3>
-    <ul class="space-y-2 text-sm leading-relaxed">
-      <li><strong>Net annuel (avec bonus) :</strong> <span id="netAnnuel">--</span> €</li>
-      <li><strong>Net mensuel (moyenne sur 12 mois) :</strong> <span id="netMois">--</span> €</li>
-      <li><strong>Net hebdomadaire :</strong> <span id="netSemaine">--</span> €</li>
-      <li><strong>Net journalier :</strong> <span id="netJour">--</span> €</li>
-      <li><strong>Net horaire (35h) :</strong> <span id="netHeure">--</span> €</li>
-      <li class="pt-2"><strong>Impôts & Cotisations :</strong> <span id="taxes">--</span> €</li>
-      <li><strong>Coût Employeur estimé :</strong> <span id="employeur">--</span> €</li>
-    </ul>
-  </div>
-</main>
-
-
-
+    <footer class="text-center text-xs text-gray-400 mt-10 pb-6">
+      © 2025 Simulateur de rémunération – Données fournies à titre indicatif.
+    </footer>
 
     <script>
-  function calculerSalaire() {
-    const brut = parseFloat(document.getElementById("brut").value);
-    const statut = document.getElementById("statut").value;
-    const tauxInput = parseFloat(document.getElementById("taux").value);
-    const mois = parseInt(document.getElementById("mois").value);
+      function calculerSalaire() {
+        const brut = parseFloat(document.getElementById("brut").value);
+        const statut = document.getElementById("statut").value;
+        const tauxInput = parseFloat(document.getElementById("taux").value);
+        const mois = parseInt(document.getElementById("mois").value);
 
-    if (isNaN(brut) || brut <= 0) {
-      alert("Veuillez saisir un salaire brut annuel valide.");
-      return;
-    }
+        if (isNaN(brut) || brut <= 0) {
+          alert("Veuillez saisir un salaire brut annuel valide.");
+          return;
+        }
 
-    const tauxParStatut = {
-      "cadre": 0.25,
-      "non-cadre": 0.23,
-      "fonctionpublique": 0.15,
-      "liberal": 0.45,
-    };
+        const tauxParStatut = {
+          "cadre": 0.25,
+          "non-cadre": 0.23,
+          "fonctionpublique": 0.15,
+          "liberal": 0.45,
+        };
 
-    const taux = !isNaN(tauxInput) && tauxInput >= 0 && tauxInput <= 100
-      ? tauxInput / 100
-      : tauxParStatut[statut] || 0.25;
+        const taux = !isNaN(tauxInput) && tauxInput >= 0 && tauxInput <= 100
+          ? tauxInput / 100
+          : tauxParStatut[statut] || 0.25;
 
-    const brutGlobal = brut * (mois / 12); // Ex : 13 mois = 1.0833
-    const netAnnuel = brutGlobal * (1 - taux);
-    const taxes = brutGlobal - netAnnuel;
-    const netMois = netAnnuel / 12;
-    const netSemaine = netAnnuel / 52;
-    const netJour = netAnnuel / 260;
-    const netHeure = netAnnuel / (52 * 35);
-    const employeur = brutGlobal * 1.25;
+        const brutGlobal = brut * (mois / 12);
+        const netAnnuel = brutGlobal * (1 - taux);
+        const taxes = brutGlobal - netAnnuel;
+        const netMois = netAnnuel / 12;
+        const netSemaine = netAnnuel / 52;
+        const netHeure = netAnnuel / (52 * 35);
+        const employeur = brutGlobal * 1.25;
 
-    const f = (n) => n.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
-    const f2 = (n) => n.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
+        const f = (n) => n.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+        const f2 = (n) => n.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
 
-    document.getElementById("netAnnuel").textContent = f(netAnnuel);
-    document.getElementById("netMois").textContent = f(netMois);
-    document.getElementById("netSemaine").textContent = f(netSemaine);
-    document.getElementById("netJour").textContent = f(netJour);
-    document.getElementById("netHeure").textContent = f2(netHeure);
-    document.getElementById("taxes").textContent = f(taxes);
-    document.getElementById("employeur").textContent = f(employeur);
+        document.getElementById("netAnnuel").textContent = f(netAnnuel) + " €";
+        document.getElementById("netMois").textContent = f(netMois) + " €";
+        document.getElementById("taxes").textContent = f(taxes) + " €";
+        document.getElementById("employeur").textContent = f(employeur) + " €";
+        document.getElementById("netSemaine").textContent = f(netAnnuel / 52) + " €";
+        document.getElementById("netHeure").textContent = f2(netHeure) + " €";
 
-    document.getElementById("resultats").classList.remove("hidden");
-  }
-</script>
-    <footer class="text-center text-xs text-gray-400 mt-10 pb-5">
-      &copy; 2025 Simulateur de rémunération – Données indicatives à titre personnel.
-    </footer>
+        document.getElementById("resultats").classList.remove("hidden");
+        document.getElementById("resultats").scrollIntoView({ behavior: "smooth" });
+      }
+    </script>
   </body>
 </html>
