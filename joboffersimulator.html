@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simulateur d'Offres d'Emploi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: 'Public Sans', sans-serif;
+      }
+      .card {
+        @apply bg-white rounded-xl shadow-lg transition-transform hover:scale-[1.015] duration-300;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-neutral-900">
+        <!-- Header -->
+    <header class="bg-white shadow-sm p-5 flex items-center justify-between">
+      <h1 class="text-2xl font-bold">💼 Comparison d'offre d'emploi </h1>
+      <nav class="space-x-6 text-sm">
+        <a href="index.html" class="hover:underline">Accueil</a>
+        <a href="dashboard.html" class="hover:underline">Dashboard</a>
+        <a href="careersimulator.html" class="hover:underline">Carrière</a>
+        <a href="joboffersimulator.html" class="hover:underline">Offres d'Emploi</a>
+        <a href="benefitshub.html" class="hover:underline">Avantages</a>
+        <a href="salaryinsights.html" class="hover:underline">Salaire</a>
+      </nav>
+    </header>
+    <main class="flex h-screen w-screen overflow-hidden">
+      <!-- 📋 Bloc Formulaires -->
+      <section
+        class="w-1/2 overflow-y-auto p-10 bg-white border-r border-gray-200 space-y-10"
+      >
+        <!-- Répéter pour 4 jobs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="formulaires">
+          <!-- L'ID sera important pour JS -->
+          <div class="bg-blue-50 p-5 rounded-xl shadow-md">
+            <h3 class="font-semibold mb-2 text-blue-700">💼 Poste Actuel</h3>
+            <input
+              type="text"
+              placeholder="Poste"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Entreprise"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Ville"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="number"
+              placeholder="Salaire brut annuel (€)"
+              class="form-input w-full mb-2 salaire"
+            />
+            <input
+              type="number"
+              placeholder="Bonus annuel (€)"
+              class="form-input w-full mb-2 bonus"
+            />
+            <input
+              type="number"
+              placeholder="Equity (€ estimée)"
+              class="form-input w-full mb-2 equity"
+            />
+          </div>
+
+          <div class="bg-white p-5 rounded-xl shadow">
+            <h3 class="font-semibold mb-2">📌 Offre 1</h3>
+            <input
+              type="text"
+              placeholder="Poste"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Entreprise"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Ville"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="number"
+              placeholder="Salaire brut annuel (€)"
+              class="form-input w-full mb-2 salaire"
+            />
+            <input
+              type="number"
+              placeholder="Bonus annuel (€)"
+              class="form-input w-full mb-2 bonus"
+            />
+            <input
+              type="number"
+              placeholder="Equity (€ estimée)"
+              class="form-input w-full mb-2 equity"
+            />
+          </div>
+
+          <div class="bg-white p-5 rounded-xl shadow">
+            <h3 class="font-semibold mb-2">📌 Offre 2</h3>
+            <input
+              type="text"
+              placeholder="Poste"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Entreprise"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Ville"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="number"
+              placeholder="Salaire brut annuel (€)"
+              class="form-input w-full mb-2 salaire"
+            />
+            <input
+              type="number"
+              placeholder="Bonus annuel (€)"
+              class="form-input w-full mb-2 bonus"
+            />
+            <input
+              type="number"
+              placeholder="Equity (€ estimée)"
+              class="form-input w-full mb-2 equity"
+            />
+          </div>
+
+          <div class="bg-white p-5 rounded-xl shadow">
+            <h3 class="font-semibold mb-2">📌 Offre 3</h3>
+            <input
+              type="text"
+              placeholder="Poste"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Entreprise"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Ville"
+              class="form-input w-full mb-2"
+            />
+            <input
+              type="number"
+              placeholder="Salaire brut annuel (€)"
+              class="form-input w-full mb-2 salaire"
+            />
+            <input
+              type="number"
+              placeholder="Bonus annuel (€)"
+              class="form-input w-full mb-2 bonus"
+            />
+            <input
+              type="number"
+              placeholder="Equity (€ estimée)"
+              class="form-input w-full mb-2 equity"
+            />
+          </div>
+        </div>
+
+        <!-- on supprime complètement le bouton -->
+      </section>
+
+      <!-- 📊 Bloc Résultats -->
+      <section class="w-1/2 overflow-y-auto p-10 space-y-10 bg-gray-50">
+        <h2 class="text-2xl font-bold mb-6">📊 Résultats & Visualisation</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="resultats">
+          <!-- Résultats injectés ici -->
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+          <h3 class="text-lg font-semibold mb-4 text-center">
+            📈 Comparaison graphique des nets estimés
+          </h3>
+          <canvas id="barChart" class="w-full max-w-2xl mx-auto"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      function format(n) {
+        return n.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+      }
+
+      function calculer() {
+        const blocs = document.querySelectorAll("#formulaires > div");
+        const resultats = document.getElementById("resultats");
+        resultats.innerHTML = "";
+        const labels = [],
+          data = [],
+          couleurs = ["#3B82F6", "#10B981", "#F59E0B", "#6366F1"];
+
+        blocs.forEach((bloc, i) => {
+          const titre = bloc.querySelector("h3")?.textContent || `Offre ${i}`;
+          const salaire = parseFloat(
+            bloc.querySelector(".salaire")?.value || 0
+          );
+          const bonus = parseFloat(bloc.querySelector(".bonus")?.value || 0);
+          const equity = parseFloat(bloc.querySelector(".equity")?.value || 0);
+          const taux = 0.25;
+          const net = Math.round((salaire + bonus + equity) * (1 - taux));
+
+          labels.push(titre);
+          data.push(net);
+
+          resultats.innerHTML += `
+        <div class="bg-blue-50 rounded-xl p-5 text-center shadow hover:scale-[1.02] transition">
+          <p class="text-sm text-gray-600 mb-1">${titre}</p>
+          <p class="text-2xl font-bold text-blue-900 mb-1">${format(net)} €</p>
+          <p class="text-xs text-gray-400">Net estimé à 25 % de charges</p>
+        </div>`;
+        });
+
+        // Chart.js
+        if (window.barChartRef) {
+          window.barChartRef.destroy();
+        }
+
+        const ctx = document.getElementById("barChart").getContext("2d");
+        window.barChartRef = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Net estimé (€)",
+                data: data,
+                backgroundColor: couleurs,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: (v) => v.toLocaleString("fr-FR") + " €",
+                },
+              },
+            },
+          },
+        });
+      }
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("input", calculer);
+      });
+    </script>
+  </body>
+</html>
